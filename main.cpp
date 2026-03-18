@@ -3,10 +3,16 @@
 //
 #include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
+#include "warehouse_map.h"
 
 
 // WINDOW ENSURING SFML IS WORKING
 int main() {
+
+    WarehouseMap myWarehouse = WarehouseMap(22, 22);
+    myWarehouse.fillOpen();
+    myWarehouse.addBorderWalls();
+    myWarehouse.print();
     sf::RenderWindow window(sf::VideoMode({200, 200}), "SFML 3.0 Works!");
     while (window.isOpen()) {
         while (const std::optional event = window.pollEvent()) {
@@ -16,5 +22,7 @@ int main() {
         window.clear();
         window.display();
     }
+
+
     return 0;
 }
