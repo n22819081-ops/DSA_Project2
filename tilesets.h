@@ -4,10 +4,18 @@
 #pragma once
 #include <vector>
 #include<string>
+#include <iostream>
+#include <random>
 
 // Define our tilesets to randomly generate it.
 std::vector<std::vector<std::string>> tileSets =
 {
+    {// Vertical shelves
+        ".#.#.",
+        ".#.#.",
+        ".....",
+        ".#.#.",
+        ".#.#." },
     {// Vertical shelves
         ".#.#.",
         ".#.#.",
@@ -38,6 +46,12 @@ std::vector<std::vector<std::string>> tileSets =
         ".....",
         ".####",
         "....." },
+    {// Horizontal shelves
+        ".###.",
+        ".....",
+        ".###.",
+        ".....",
+        ".###." },
     {// Center aisle
         "##.##",
         "##.##",
@@ -61,5 +75,47 @@ std::vector<std::vector<std::string>> tileSets =
         "..#..",
         ".....",
         "..#..",
+        "....." },
+    {// pillar
+        ".....",
+        ".#.#.",
+        ".#.#.",
+        ".#.#.",
+        "....." },
+    {// left side
+        "##...",
+        "##...",
+        "##...",
+        "##...",
+        "....." },
+    {// left side
+        ".....",
+        "##...",
+        "##...",
+        "##...",
+        "##..." },
+    {// right
+        "...##",
+        "...##",
+        "...##",
+        "...##",
+        "....." },
+    {// right
+        ".....",
+        "...##",
+        "...##",
+        "...##",
+        "...##" },
+    {// offset
+        ".....",
+        "..###",
+        ".....",
+        "###..",
+        "....." },
+    {// offset
+        ".....",
+        "###..",
+        ".....",
+        "..###",
         "....." },
 };

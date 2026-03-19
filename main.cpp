@@ -12,6 +12,7 @@ int main() {
     WarehouseMap myWarehouse = WarehouseMap(22, 22);
     myWarehouse.fillOpen();
     myWarehouse.addBorderWalls();
+    myWarehouse.generateFromTiles();
     myWarehouse.print();
     sf::RenderWindow window(sf::VideoMode({200, 200}), "SFML 3.0 Works!");
     while (window.isOpen()) {
