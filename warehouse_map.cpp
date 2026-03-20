@@ -1,7 +1,6 @@
 //
 // Created by omgit on 3/18/2026.
 //
-#pragma once
 #include "warehouse_map.h"
 #include "tilesets.h"
 
@@ -48,8 +47,8 @@ void WarehouseMap::addBorderWalls() {
 // Grid [1][1] -> grid[5][5] | grid[6][6] -> grid[10][10] -> grid[11][11] -> grid[15][15] -> grid[16][16] -> grid[20][20]
 // GET A RANDOM TILESET FROM TILESET.H and using random
 // loopthru tileset and apply it to grid. repeat this 4 times. and then 4 more times
-void WarehouseMap::generateFromTiles() {
-    std::default_random_engine tileset_generator;
+void WarehouseMap::generateFromTiles(std::default_random_engine& tileset_generator) {
+
     // Picking a random tileset
     std::uniform_int_distribution<int> distribution(0, tileSets.size()-1);
 
@@ -118,11 +117,6 @@ void WarehouseMap::generateFromTiles() {
                 //this->print();
             }
         }
-
-
-
-
-
         count += 1;
     }
 
@@ -135,10 +129,10 @@ bool WarehouseMap::isWalkable(int row, int col) {
 }
 
 char WarehouseMap::getCell(int row, int col) {
-    return grid[row][col];
+    return this->grid[row][col];
 }
 void WarehouseMap::setCell(int row, int col, char value) {
-    grid[row][col] = value;
+    this->grid[row][col] = value;
 }
 std::pair<int, int> WarehouseMap::findCell(char target) {
     for (int row=0; row<rows; row++) {
@@ -157,6 +151,53 @@ void WarehouseMap::print() {
             std::cout << getCell(row, col) << ' ';
         }
         std::cout << std::endl;
+    }
+}
+std::vector<std::vector<char>>& WarehouseMap::getGrid() {
+    return this->grid;
+}
+void WarehouseMap::placeSpecialCells(std::default_random_engine& pos_Generator) {
+    bool s_placed = false;
+    bool f_placed = false;
+    bool p_placed = false;
+
+    std::uniform_int_distribution<int> distribution(0, 20);
+    int positionX = distribution(pos_Generator);
+    int positionY = distribution(pos_Generator);
+    while (!s_placed || !f_placed || !p_placed) {
+        positionX = distribution(pos_Generator);
+        positionY = distribution(pos_Generator);
+
+
+        if (grid[positionX][positionY] == '.' && !s_placed) {
+            s_placed = true;
+            //std::cout << "Placing S at " << positionX << "," << positionY << std::endl;
+            grid[positionX][positionY] = 'S';
+        }
+        if (grid[positionX][positionY] == '#' && !p_placed && (positionX != 0 && positionY != 0 )) {
+            p_placed = true;
+            //std::cout << "Placing P at " << positionX << "," << positionY << std::endl;
+            grid[positionX][positionY] = 'P';
+        }
+        if (grid[positionX][positionY] == '.' && !f_placed && s_placed) {
+            f_placed = true;
+            //std::cout << "Placing F at " << positionX << "," << positionY << std::endl;
+            grid[positionX][positionY] = 'F';
+        }
+
+        // Generate random position on grid
+        // Check if pos it '.' char
+        // If open assign S cell to that pos
+        // Otherwise try again
+
+
+        // P tile should be on some shelf for cool factor
+        // Generate random position on grid
+        // Check if pos is '#' char
+        // assign P cell to that pos
+        // Otherwise try again
+
+        // same thing for S but use F
     }
 }
 

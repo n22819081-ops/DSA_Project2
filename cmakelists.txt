@@ -4,11 +4,11 @@ cmake_minimum_required(VERSION 4.0)
 #set(CMAKE_CXX_STANDARD 20)
 #
 add_executable(DSA_Project2 main.cpp
-        map_creation.cpp
         tilesets.h
         tilesets.h
         warehouse_map.cpp
-        warehouse_map.h)
+        warehouse_map.h
+        map_creation.h)
 # Require CMake version 3.28 or newer
 cmake_minimum_required(VERSION 3.28)
 
@@ -34,7 +34,6 @@ FetchContent_MakeAvailable(SFML)
 # Create the executable and specify the C++ source file to compile
 # (change "main" and update file paths if needed)
 add_executable(main main.cpp
-        map_creation.cpp
         tilesets.h
         warehouse_map.cpp
         warehouse_map.h)

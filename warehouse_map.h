@@ -4,6 +4,7 @@
 
 #ifndef DSA_PROJECT2_WAREHOUSE_MAP_H
 #define DSA_PROJECT2_WAREHOUSE_MAP_H
+#include <random>
 #include <vector>
 // Map is a 20x20 grid
 // consider
@@ -37,11 +38,11 @@ public:
 
     // Builds the warehouse layour by randomly selecting and
     // placing tilesets into grid
-    void generateFromTiles();
+    void generateFromTiles(std::default_random_engine& ts_gen);
 
     // RANDOMLY places special cells "S", "P" and "F"
     // on valid open positions
-    void placeSpecialCells();
+    void placeSpecialCells(std::default_random_engine& pos_gen);
 
     // Returns true if given row and col are insidide bounds
     bool inBounds(int row, int col);
@@ -62,7 +63,8 @@ public:
     std::pair<int, int> findCell(char target);
 
     void print();
-
+    // returns grid vector of vector of chars
+    std::vector<std::vector<char>>& getGrid();
 };
 
 
