@@ -40,10 +40,10 @@ class MainWindow : public sf::RenderWindow {
         this->map.resize(row, std::vector<char>(col, '.'));
 
         // Load files
-        if (!wallTexture.loadFromFile("images/tile_wall.png")) {
+        if (!wallTexture.loadFromFile("images/tile_wall_2.png")) {
             std::cerr << "YOU ARE COOKED FAILED TO LOAD WALL.PNG" << std::endl;
         }
-        if (!openTexture.loadFromFile("images/tile_open.png")) {
+        if (!openTexture.loadFromFile("images/tile_open_2.png")) {
             std::cerr << "YOU ARE COOKED FAILED TO LOAD OPEN.PNG" << std::endl;
         }
         if (!s_special_texture.loadFromFile("images/tile_ss.png")) {
