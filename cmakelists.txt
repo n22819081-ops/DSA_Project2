@@ -8,7 +8,10 @@ add_executable(DSA_Project2 main.cpp
         tilesets.h
         warehouse_map.cpp
         warehouse_map.h
-        map_creation.h)
+        map_creation.h
+        main_window.h
+        tile.h
+)
 # Require CMake version 3.28 or newer
 cmake_minimum_required(VERSION 3.28)
 
@@ -36,7 +39,8 @@ FetchContent_MakeAvailable(SFML)
 add_executable(main main.cpp
         tilesets.h
         warehouse_map.cpp
-        warehouse_map.h)
+        warehouse_map.h
+)
 
 # Set the C++ language standard (C++17 required for SFML sample code)
 target_compile_features(main PRIVATE cxx_std_17)

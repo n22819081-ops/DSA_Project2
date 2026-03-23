@@ -66,13 +66,12 @@ bool canReach(std::vector<std::vector<char>>& map,std::pair<int, int> start, std
     }
     return false;
 }
-
+// from main take in map idx
 
 std::vector<std::vector<char>> create_map(std::default_random_engine& gen) {
     int rows = 22;
     int cols = 22;
-    int create_count = 0;
-    while (create_count < 100) {
+    //int create_count = 0;
         WarehouseMap warehouseMap = WarehouseMap(rows, cols);
         warehouseMap.fillOpen();
         warehouseMap.addBorderWalls();
@@ -84,14 +83,10 @@ std::vector<std::vector<char>> create_map(std::default_random_engine& gen) {
         std::cout << canReach(warehouseMap.getGrid(), start, item) << " AND " << canReach(warehouseMap.getGrid(), item, goal) << std::endl;
         if (canReach(warehouseMap.getGrid(), start, item) && canReach(warehouseMap.getGrid(), item, goal )){
             warehouseMap.print();
-            create_count++;
-            std::cout << create_count  << std::endl;
+            //create_count++;
+            //std::cout << create_count  << std::endl;
         }
-    }
+
+    return  warehouseMap.getGrid();
 }
-
-int MAP_SIZE = 20;
-int TILE_SIZE = 10;
-
-
 #endif //DSA_PROJECT2_MAP_CREATION_H
