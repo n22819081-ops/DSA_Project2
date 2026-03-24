@@ -73,7 +73,11 @@ class MainWindow : public sf::RenderWindow {
                 // need index for tile because 1d vec
                 int index = y*this->col + x;
                 if (map[y][x] == '.') {
+                    int randomNum = static_cast<char>(rand() % 101);
+                    map[y][x] = randomNum;
+                    std::cout << randomNum;
                     tiles[index].setState(Tile::TileState::Open);
+                    std::cout << map[y][x];
                 }
                 if (map[y][x] == '#') {
                     tiles[index].setState(Tile::TileState::Wall);
@@ -91,10 +95,9 @@ class MainWindow : public sf::RenderWindow {
             }
         }
     }
-    // Runs Dijkstra on the current map and highlights the path tiles yellow.
-    // Call this after setMap().
+   
     void showPath() {
-        // Find the start cell 'S' in the map
+      
         int startRow = -1, startCol = -1;
         for (int y = 0; y < this->row && startRow == -1; y++) {
             for (int x = 0; x < this->col && startRow == -1; x++) {
@@ -106,10 +109,10 @@ class MainWindow : public sf::RenderWindow {
         }
         if (startRow == -1) return;  // no start cell, nothing to do
 
-        // Run Dijkstra — returns ordered path from S to F
+      
         std::vector<std::pair<int,int>> path = dijkstra(this->map, startRow, startCol);
 
-        // Color every path cell except S and F (those keep their special textures)
+     
         for (auto& [r, c] : path) {
             if (map[r][c] == 'S' || map[r][c] == 'F') continue;
             int index = r * this->col + c;
