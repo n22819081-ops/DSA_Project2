@@ -29,14 +29,14 @@ void WarehouseMap::fillOpen() {
 }
 
 void WarehouseMap::replaceOpen(std::default_random_engine& ro_Generator) {
-    std::uniform_int_distribution<int> distribution(0, 2);
+    std::uniform_int_distribution<int> distribution(0, 5);
 
     //std::cout << "RANDOM GENERATOR: " << rand_n << std::endl;
     for (int row=0; row<rows; row++) {
         for (int col=0; col<cols; col++) {
             int rand_n = distribution(ro_Generator);
             if (grid[row][col] == '.') {
-                if (rand_n == 0) {
+                if (rand_n != 1 && rand_n != 2) {
                     grid[row][col] = '.';
                 }
                 else if (rand_n == 1) {

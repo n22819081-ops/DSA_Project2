@@ -18,7 +18,9 @@ class Tile {
             S_Special,
             P_Special,
             F_Special,
-            Crate
+            Crate,
+            OpenStair,
+            OpenHuman
         };
 
     private:
@@ -28,6 +30,8 @@ class Tile {
         sf::Texture* s_special_texture;
         sf::Texture* p_special_texture;
         sf::Texture* f_special_texture;
+        sf::Texture* human_texture;
+        sf::Texture* stair_texture;
 
         sf::Sprite sprite;
         TileState state;
@@ -35,10 +39,12 @@ class Tile {
     public:
         // Constructor
         Tile(sf::Texture& open_texture, sf::Texture& wall_texture, sf::Texture& s_special_texture,
-        sf::Texture& p_special_texture, sf::Texture& f_special_texture, sf::Texture& crate_texture, float x, float y) :
+        sf::Texture& p_special_texture, sf::Texture& f_special_texture, sf::Texture& crate_texture, sf::Texture& human_texture, sf::Texture& stair_texture, float x, float y) :
         open_texture(&open_texture),
         wall_texture(&wall_texture),
         crate_texture(&crate_texture),
+        human_texture(&human_texture),
+        stair_texture(&stair_texture),
         s_special_texture(&s_special_texture),
         p_special_texture(&p_special_texture),
         f_special_texture(&f_special_texture),
@@ -52,6 +58,12 @@ class Tile {
             this->state = newState;
             if (this->state == Open) {
                 this->sprite.setTexture(*open_texture);
+            }
+            if (this->state == OpenStair) {
+                this->sprite.setTexture(*stair_texture);
+            }
+            if (this->state == OpenHuman) {
+                this->sprite.setTexture(*human_texture);
             }
             if (this->state == Wall) {
                 this->sprite.setTexture(*wall_texture);

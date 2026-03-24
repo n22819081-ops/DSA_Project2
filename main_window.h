@@ -23,6 +23,8 @@ class MainWindow : public sf::RenderWindow {
         sf::Texture s_special_texture;
         sf::Texture p_special_texture;
         sf::Texture cratetexture;
+        sf::Texture humantexture;
+        sf::Texture stairtexture;
 
         // Options
         // We need buttons for randomly selection of map,
@@ -45,6 +47,12 @@ class MainWindow : public sf::RenderWindow {
         if (!wallTexture.loadFromFile("images/tile_wall_2.png")) {
             std::cerr << "YOU ARE COOKED FAILED TO LOAD WALL.PNG" << std::endl;
         }
+        if (!humantexture.loadFromFile("images/tile_open_w2.png")) {
+            std::cerr << "YOU ARE COOKED FAILED TO LOAD HUMAN" << std::endl;
+        }
+        if (!stairtexture.loadFromFile("images/tile_open_w1.png")) {
+            std::cerr << "YOU ARE COOKED FAILED TO LOAD STAIRS" << std::endl;
+        }
         if (!openTexture.loadFromFile("images/tile_open_4.png")) {
             std::cerr << "YOU ARE COOKED FAILED TO LOAD OPEN.PNG" << std::endl;
         }
@@ -65,7 +73,7 @@ class MainWindow : public sf::RenderWindow {
         // 32 x 32 images
         for (int y=0; y<this->row; y++) {
             for (int x=0; x<this->col; x++) {
-                tiles.emplace_back(openTexture, wallTexture, s_special_texture, p_special_texture, f_special_texture, cratetexture,  static_cast<float>(x*32), static_cast<float>(y*32));
+                tiles.emplace_back(openTexture, wallTexture, s_special_texture, p_special_texture, f_special_texture, cratetexture,humantexture, stairtexture,  static_cast<float>(x*32), static_cast<float>(y*32));
             }
         }
     }
@@ -76,8 +84,14 @@ class MainWindow : public sf::RenderWindow {
             for (int x=0; x<this->col; x++) {
                 // need index for tile because 1d vec
                 int index = y*this->col + x;
-                if (map[y][x] == '.' || map[y][x] == '%' || map[y][x] == '^') {
+                if (map[y][x] == '.' ) {
                     tiles[index].setState(Tile::TileState::Open);
+                }
+                if (map[y][x] == '%') {
+                    tiles[index].setState(Tile::TileState::OpenStair);
+                }
+                if (map[y][x] == '^') {
+                    tiles[index].setState(Tile::TileState::OpenHuman);
                 }
                 if (map[y][x] == '#') {
                     if (y == 0 || y == (this->row-1) || x == 0 || x == (this->col-1)) {
