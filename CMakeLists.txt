@@ -1,18 +1,3 @@
-cmake_minimum_required(VERSION 4.0)
-#project(DSA_Project2)
-#
-#set(CMAKE_CXX_STANDARD 20)
-#
-add_executable(DSA_Project2 main.cpp
-        tilesets.h
-        tilesets.h
-        warehouse_map.cpp
-        warehouse_map.h
-        map_creation.h
-        main_window.h
-        tile.h
-)
-# Require CMake version 3.28 or newer
 cmake_minimum_required(VERSION 3.28)
 
 # Name of the project (you should change this to match your project)
@@ -37,13 +22,18 @@ FetchContent_MakeAvailable(SFML)
 # Create the executable and specify the C++ source file to compile
 # (change "main" and update file paths if needed)
 add_executable(main main.cpp
-        tilesets.h
         warehouse_map.cpp
         warehouse_map.h
+        map_creation.h
+        main_window.h
+        tile.h
+        Dijkstra.cpp
+        Dijkstra.h
+        tilesets.h
 )
 
-# Set the C++ language standard (C++17 required for SFML sample code)
-target_compile_features(main PRIVATE cxx_std_17)
+# C++20 needed for structured bindings used in Dijkstra
+target_compile_features(main PRIVATE cxx_std_20)
 
 # Link the SFML Graphics module so you can draw 2D shapes, rendering windows, etc.
 target_link_libraries(main PRIVATE SFML::Graphics)

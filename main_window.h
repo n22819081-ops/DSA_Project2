@@ -4,6 +4,7 @@
 #include <iostream>
 #include <SFML/Graphics.hpp>
 #include "tile.h"
+#include "Dijkstra.h"
 #include <random>
 #ifndef DSA_PROJECT2_MAIN_WINDOW_H
 #define DSA_PROJECT2_MAIN_WINDOW_H
@@ -86,6 +87,7 @@ class MainWindow : public sf::RenderWindow {
                 int index = y*this->col + x;
                 if (map[y][x] == '.' ) {
                     tiles[index].setState(Tile::TileState::Open);
+                    std::cout << map[y][x];
                 }
                 if (map[y][x] == '%') {
                     tiles[index].setState(Tile::TileState::OpenStair);
@@ -112,6 +114,31 @@ class MainWindow : public sf::RenderWindow {
             }
         }
     }
+   
+    void showPath() {
+      
+        int startRow = -1, startCol = -1;
+        for (int y = 0; y < this->row && startRow == -1; y++) {
+            for (int x = 0; x < this->col && startRow == -1; x++) {
+                if (map[y][x] == 'S') {
+                    startRow = y;
+                    startCol = x;
+                }
+            }
+        }
+        if (startRow == -1) return;  // no start cell, nothing to do
+
+      
+        std::vector<std::pair<int,int>> path = dijkstra(this->map, startRow, startCol);
+
+     
+        for (auto& [r, c] : path) {
+            if (map[r][c] == 'S' || map[r][c] == 'F') continue;
+            int index = r * this->col + c;
+            tiles[index].setState(Tile::TileState::Path);
+        }
+    }
+
     void run() {
         sf::Clock clock;
 

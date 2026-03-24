@@ -8,6 +8,9 @@
 #include "main_window.h"
 #include <random>
 
+// cmake --build build && ./build/bin/main
+//git pull friend main 
+
 // WINDOW ENSURING SFML IS WORKING
 int main() {
 
@@ -23,6 +26,7 @@ int main() {
     //sf::RenderWindow window(sf::VideoMode({200, 200}), "SFML 3.0 Works!");
     MainWindow window(704, 804);
     window.setMap(myMap);
+    window.showPath();  // run Dijkstra and highlight the path
     window.run();
 
 
