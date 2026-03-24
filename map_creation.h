@@ -11,11 +11,9 @@
 #include <vector>
 #include <queue>
 #include <iostream>
+#include <fstream>
 
 #include "warehouse_map.h"
-
-
-
 
 
 // We need to ensure that the map is traversable by the algo
@@ -70,6 +68,15 @@ bool canReach(std::vector<std::vector<char>>& map,std::pair<int, int> start, std
     }
     return false;
 }
+//
+void saveToCSV(int map_id, std::vector<std::vector<char>> grid) {
+
+
+}
+
+
+
+
 // from main take in map idx
 
 std::vector<std::vector<char>> create_map(std::default_random_engine& gen) {
@@ -80,6 +87,7 @@ std::vector<std::vector<char>> create_map(std::default_random_engine& gen) {
         warehouseMap.fillOpen();
         warehouseMap.addBorderWalls();
         warehouseMap.generateFromTiles(gen);
+        warehouseMap.replaceOpen(gen);
         warehouseMap.placeSpecialCells(gen);
         std::pair<int,int> start = warehouseMap.findCell('S');
         std::pair<int,int> goal = warehouseMap.findCell('F');
