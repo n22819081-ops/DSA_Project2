@@ -40,7 +40,7 @@ class Tile {
     public:
         // Constructor
         Tile(sf::Texture& open_texture, sf::Texture& wall_texture, sf::Texture& s_special_texture,
-        sf::Texture& p_special_texture, sf::Texture& f_special_texture, sf::Texture& crate_texture, float x, float y) :
+        sf::Texture& p_special_texture, sf::Texture& f_special_texture, sf::Texture& crate_texture, sf::Texture& human_texture, sf::Texture& stair_texture, float x, float y) :
         open_texture(&open_texture),
         wall_texture(&wall_texture),
         crate_texture(&crate_texture),
