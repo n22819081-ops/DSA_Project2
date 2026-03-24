@@ -18,6 +18,7 @@ class Tile {
             S_Special,
             P_Special,
             F_Special,
+            Path,
             Crate
         };
 
@@ -50,6 +51,8 @@ class Tile {
 
         void setState(TileState newState) {
             this->state = newState;
+            
+            this->sprite.setColor(sf::Color::White);
             if (this->state == Open) {
                 this->sprite.setTexture(*open_texture);
             }
@@ -67,6 +70,11 @@ class Tile {
             }
             if (this->state == F_Special) {
                 this->sprite.setTexture(*f_special_texture);
+            }
+            if (this->state == Path) {
+               
+                this->sprite.setTexture(*open_texture);
+                this->sprite.setColor(sf::Color(255, 220, 0));
             }
         }
 

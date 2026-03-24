@@ -1,62 +1,111 @@
-vector<int> dijkstra(vector<vector<pair<int,int>>>& adj, int src) {
+#include "Dijkstra.h"
+#include <queue>
+#include <tuple>
+#include <climits>
+#include <algorithm>
+using namespace std;
 
+vector<pair<int,int>> dijkstra(vector<vector<char>>& grid, int startRow, int startCol) {
+
+    //First off intiailize the rows and columns of our grid 
     int totalRows = grid.size();
     int totalCols = grid[0].size();
 
-    priority_queue<tuple<int,int,int> vector<tuple<int, int, int>>, greater<tuple<int, int, int>>> pq;
+  
+   //Vector to store the node distances within and also a vector to be able to trace our steps for the actual path 
 
-    vector<int> nodeDistance(graphSize, INT_MAX);
+    vector<vector<int>> nodeDistance(totalRows, vector<int>(totalCols, INT_MAX));
 
-    nodeDistance[startRow][starCol] = 0;
+   
+    vector<vector<pair<int,int>>> previousNode(totalRows, vector<pair<int,int>>(totalCols, {-1, -1}));
+
+    
+    //priority queue to rank nodes from least to greatest 
+    priority_queue<tuple<int,int,int>, vector<tuple<int,int,int>>, greater<tuple<int,int,int>>> pq;
+
+    nodeDistance[startRow][startCol] = 0;
     pq.emplace(0, startRow, startCol);
 
+    
+    int rowOffset[] = {-1, 1, 0, 0};
+    int colOffset[] = {0, 0, -1, 1};
 
-     int rowOffset[] = {-1, 1, 0, 0};
-     int colOffset[] = {0, 0, -1, 1};
+    int goalRow = -1;
+    
+    int goalCol = -1;
 
 
+    
     while (!pq.empty()) {
-        
-        auto [distanceValue, currentRow, currentCol] = pq.top();
+        auto [distance, currentRow, currentCol] = pq.top();
         pq.pop();
 
-
-         if (distanceValue > nodeDistance[currentRow][currentCol])
+      
+        //determines if the path is 'stale' or already covered 
+        if (distance > nodeDistance[currentRow][currentCol])
             continue;
 
-
-
-    for (int i = 0; i < 4; i++) {
-
-        
-        int neighborRow = currentRow + rowOffset[i];
-        int neighborCol = currentRow + colOffset[i];
-
-
-        int edgeWeight = 1;
-    
-
-        if grid[neighborRow][neighborCol] == '*' {   //assuming I have a vector that holds the actual map data 
-            continue;
+        //if it is F we are finished 
+        if (grid[currentRow][currentCol] == 'F') {
+            goalRow = currentRow;
+            goalCol = currentCol;
+            break;
         }
 
+      //loop through four times as we can go up, down, right, or left 
+        for (int i = 0; i < 4; i++) {
+            int neighborRow = currentRow + rowOffset[i];
+            int neighborCol = currentCol + colOffset[i];  
 
-        if (neighborRow < 0 || neighborRow >= totalRows || neighborCol < 0 || neighborCol >= totalCols) {
-            continue;
-        }
+            int tileWeight = 1;
+
+      //make sure we remain inbounds 
+            if (neighborRow < 0 || neighborRow >= totalRows ||
+                neighborCol < 0 || neighborCol >= totalCols)
+                continue;
+
+            //just continue if a # as this is a wall 
+            if (grid[neighborRow][neighborCol] == '#')
+                continue;
+
+            if (grid[neighborRow][neighborCol] == '.') {
+                tileWeight = 1; 
+                } else if (grid[neighborRow][neighborCol] == '^') {
+                tileWeight = 3;
+                }
+            else {
+                tileWeight = 2;
+            }
+
+            
 
 
+          //checks to see if there is a faster path and updates vectors in case there is one 
+            int newDist = nodeDistance[currentRow][currentCol] + tileWeight;
 
-           if (nodeDistance[currentRow][currentCol] + edgeWeight < nodeDistance[neighborRow][neighborCol]) {
-                nodeDistance[neighborRow][neighborCol] = nodeDistance[currentRow][currentCol] + 1;   
-                pq.emplace(distance, neighborRow, neighborCol);
+            if (newDist < nodeDistance[neighborRow][neighborCol]) {
+
+                nodeDistance[neighborRow][neighborCol] = newDist;
+                previousNode[neighborRow][neighborCol] = nodeDistance[currentRow][currentCol] + tileWeight;
+                pq.emplace(newDist, neighborRow, neighborCol);
             }
         }
     }
 
+  //putting it altogether we can build and return our path 
+    vector<pair<int,int>> robotPath;
 
-    return nodeDistance;
+    if (goalRow == -1) {
+        return robotPath;
+    }
+
+    while (!(goalRow == startRow && goalCol == startCol)) {
+        robotPath.push_back({goalRow, goalCol});
+        auto [prevRow, prevCol] = previousNode[goalRow][goalCol];
+        goalRow = prevRow;
+        goalCol = prevCol;
+    }
+    robotPath.push_back({startRow, startCol});
+    reverse(robotPath.begin(), robotPath.end());
+    return robotPath;
 }
-
-
-
