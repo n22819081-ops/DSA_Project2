@@ -86,7 +86,7 @@ vector<pair<int,int>> dijkstra(vector<vector<char>>& grid, int startRow, int sta
             if (newDist < nodeDistance[neighborRow][neighborCol]) {
 
                 nodeDistance[neighborRow][neighborCol] = newDist;
-                previousNode[neighborRow][neighborCol] = nodeDistance[currentRow][currentCol] + tileWeight;
+                previousNode[neighborRow][neighborCol] = {currentRow, currentCol};
                 pq.emplace(newDist, neighborRow, neighborCol);
             }
         }
