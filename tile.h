@@ -17,7 +17,8 @@ class Tile {
             Wall,
             S_Special,
             P_Special,
-            F_Special
+            F_Special,
+            Path        // shortest-path highlight
         };
 
     private:
@@ -47,6 +48,8 @@ class Tile {
 
         void setState(TileState newState) {
             this->state = newState;
+            // Reset tint so Path color doesn't bleed into other states
+            this->sprite.setColor(sf::Color::White);
             if (this->state == Open) {
                 this->sprite.setTexture(*open_texture);
             }
@@ -61,6 +64,11 @@ class Tile {
             }
             if (this->state == F_Special) {
                 this->sprite.setTexture(*f_special_texture);
+            }
+            if (this->state == Path) {
+                // Reuse open texture, tint it yellow to show the path
+                this->sprite.setTexture(*open_texture);
+                this->sprite.setColor(sf::Color(255, 220, 0));
             }
         }
 

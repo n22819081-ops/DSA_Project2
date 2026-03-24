@@ -4,6 +4,7 @@
 #include <iostream>
 #include <SFML/Graphics.hpp>
 #include "tile.h"
+#include "Dijkstra.h"
 #ifndef DSA_PROJECT2_MAIN_WINDOW_H
 #define DSA_PROJECT2_MAIN_WINDOW_H
 class MainWindow : public sf::RenderWindow {
@@ -90,6 +91,32 @@ class MainWindow : public sf::RenderWindow {
             }
         }
     }
+    // Runs Dijkstra on the current map and highlights the path tiles yellow.
+    // Call this after setMap().
+    void showPath() {
+        // Find the start cell 'S' in the map
+        int startRow = -1, startCol = -1;
+        for (int y = 0; y < this->row && startRow == -1; y++) {
+            for (int x = 0; x < this->col && startRow == -1; x++) {
+                if (map[y][x] == 'S') {
+                    startRow = y;
+                    startCol = x;
+                }
+            }
+        }
+        if (startRow == -1) return;  // no start cell, nothing to do
+
+        // Run Dijkstra — returns ordered path from S to F
+        std::vector<std::pair<int,int>> path = dijkstra(this->map, startRow, startCol);
+
+        // Color every path cell except S and F (those keep their special textures)
+        for (auto& [r, c] : path) {
+            if (map[r][c] == 'S' || map[r][c] == 'F') continue;
+            int index = r * this->col + c;
+            tiles[index].setState(Tile::TileState::Path);
+        }
+    }
+
     void run() {
         sf::Clock clock;
 
