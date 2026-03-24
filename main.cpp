@@ -8,6 +8,9 @@
 #include "main_window.h"
 #include <random>
 
+// cmake --build build && ./build/bin/main
+//git pull friend main 
+
 // WINDOW ENSURING SFML IS WORKING
 int main() {
 

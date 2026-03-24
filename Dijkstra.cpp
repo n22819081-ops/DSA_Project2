@@ -57,6 +57,8 @@ vector<pair<int,int>> dijkstra(vector<vector<char>>& grid, int startRow, int sta
             int neighborRow = currentRow + rowOffset[i];
             int neighborCol = currentCol + colOffset[i];  
 
+            int tileWeight = 1;
+
       //make sure we remain inbounds 
             if (neighborRow < 0 || neighborRow >= totalRows ||
                 neighborCol < 0 || neighborCol >= totalCols)
@@ -66,14 +68,25 @@ vector<pair<int,int>> dijkstra(vector<vector<char>>& grid, int startRow, int sta
             if (grid[neighborRow][neighborCol] == '#')
                 continue;
 
+            if (grid[neighborRow][neighborCol] == '.') {
+                tileWeight = 1; 
+                } else if (grid[neighborRow][neighborCol] == '^') {
+                tileWeight = 3;
+                }
+            else {
+                tileWeight = 2;
+            }
+
+            
+
 
           //checks to see if there is a faster path and updates vectors in case there is one 
-            int newDist = nodeDistance[currentRow][currentCol] + 1;
+            int newDist = nodeDistance[currentRow][currentCol] + tileWeight;
 
             if (newDist < nodeDistance[neighborRow][neighborCol]) {
 
                 nodeDistance[neighborRow][neighborCol] = newDist;
-                previousNode[neighborRow][neighborCol] = {currentRow, currentCol};
+                previousNode[neighborRow][neighborCol] = nodeDistance[currentRow][currentCol] + tileWeight;
                 pq.emplace(newDist, neighborRow, neighborCol);
             }
         }
