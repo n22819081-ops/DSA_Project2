@@ -28,6 +28,28 @@ void WarehouseMap::fillOpen() {
     }
 }
 
+void WarehouseMap::replaceOpen(std::default_random_engine& ro_Generator) {
+    std::uniform_int_distribution<int> distribution(0, 2);
+
+    //std::cout << "RANDOM GENERATOR: " << rand_n << std::endl;
+    for (int row=0; row<rows; row++) {
+        for (int col=0; col<cols; col++) {
+            int rand_n = distribution(ro_Generator);
+            if (grid[row][col] == '.') {
+                if (rand_n == 0) {
+                    grid[row][col] = '.';
+                }
+                else if (rand_n == 1) {
+                    grid[row][col] = '^';
+                }
+                else if (rand_n == 2) {
+                    grid[row][col] = '%';
+                }
+            }
+        }
+    }
+}
+
 void WarehouseMap::addBorderWalls() {
     for (int row=0; row<rows; row++) {
         // RIGHT SIDE and LEFT SIDE
@@ -169,7 +191,7 @@ void WarehouseMap::placeSpecialCells(std::default_random_engine& pos_Generator) 
         positionY = distribution(pos_Generator);
 
 
-        if (grid[positionX][positionY] == '.' && !s_placed) {
+        if ((grid[positionX][positionY] == '.' || grid[positionX][positionY] == '^' || grid[positionX][positionY] == '%' ) && !s_placed) {
             s_placed = true;
             //std::cout << "Placing S at " << positionX << "," << positionY << std::endl;
             grid[positionX][positionY] = 'S';
@@ -179,7 +201,7 @@ void WarehouseMap::placeSpecialCells(std::default_random_engine& pos_Generator) 
             //std::cout << "Placing P at " << positionX << "," << positionY << std::endl;
             grid[positionX][positionY] = 'P';
         }
-        if (grid[positionX][positionY] == '.' && !f_placed && s_placed) {
+        if ((grid[positionX][positionY] == '.' || grid[positionX][positionY] == '^' || grid[positionX][positionY] == '%' ) && !f_placed && s_placed) {
             f_placed = true;
             //std::cout << "Placing F at " << positionX << "," << positionY << std::endl;
             grid[positionX][positionY] = 'F';

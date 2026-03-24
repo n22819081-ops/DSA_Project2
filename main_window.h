@@ -4,6 +4,7 @@
 #include <iostream>
 #include <SFML/Graphics.hpp>
 #include "tile.h"
+#include <random>
 #ifndef DSA_PROJECT2_MAIN_WINDOW_H
 #define DSA_PROJECT2_MAIN_WINDOW_H
 class MainWindow : public sf::RenderWindow {
@@ -75,7 +76,7 @@ class MainWindow : public sf::RenderWindow {
             for (int x=0; x<this->col; x++) {
                 // need index for tile because 1d vec
                 int index = y*this->col + x;
-                if (map[y][x] == '.') {
+                if (map[y][x] == '.' || map[y][x] == '%' || map[y][x] == '^') {
                     tiles[index].setState(Tile::TileState::Open);
                 }
                 if (map[y][x] == '#') {
@@ -94,7 +95,6 @@ class MainWindow : public sf::RenderWindow {
                 if (map[y][x] == 'F') {
                     tiles[index].setState(Tile::TileState::F_Special);
                 }
-
             }
         }
     }

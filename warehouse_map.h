@@ -33,6 +33,7 @@ public:
     // Fills every cell in the grid with open marker ('.')
     void fillOpen();
 
+    void replaceOpen(std::default_random_engine& ro_Generator);
     // Places walls around outer border of the warehouse map
     void addBorderWalls();
 
