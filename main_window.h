@@ -12,6 +12,10 @@
 #include "map_creation.h"
 #ifndef DSA_PROJECT2_MAIN_WINDOW_H
 #define DSA_PROJECT2_MAIN_WINDOW_H
+struct return_paths {
+    Path_Result path_result;
+    DjikstraResult djikstra_path;
+};
 class MainWindow : public sf::RenderWindow {
     private:
         int width;
@@ -20,6 +24,9 @@ class MainWindow : public sf::RenderWindow {
         int col;
         std::vector<Tile> tiles;
         std::vector<std::vector<char>> map;
+        return_paths my_return_paths;
+        bool v_astar;
+        bool v_dijkstra;
         // Texture used for MainWindow
         // For warehouse map
         sf::Texture wallTexture;
@@ -37,6 +44,7 @@ class MainWindow : public sf::RenderWindow {
         Button* runDijkstraButton;
         Button* runAStarButton;
         Button* resetButton;
+        Button* statButton;
 
 
         // Options
@@ -55,6 +63,8 @@ class MainWindow : public sf::RenderWindow {
         this->row = (height-100)/32;
         this->col = (width)/32;
         this->map.resize(row, std::vector<char>(col, '.'));
+        this->v_astar = false;
+        this->v_dijkstra = false;
 
         // Load files
         if (!wallTexture.loadFromFile("images/tile_wall_2.png")) {
@@ -89,6 +99,7 @@ class MainWindow : public sf::RenderWindow {
         runAStarButton = new Button (190.f, 720.f,120.f, 50.f, font, "Run A*");
         runDijkstraButton = new Button(330.f, 720.f, 140.f, 50.f, font, "Run Dijkstra");
         resetButton = new Button(490.f, 720.f, 100.f, 50.f,  font, "Reset");
+        statButton = new Button(615.f, 720.f, 75.f, 50.f,  font, "Stats");
         // Generate tiles
         // 32 x 32 images
         for (int y=0; y<this->row; y++) {
@@ -163,11 +174,11 @@ class MainWindow : public sf::RenderWindow {
             bool pushingP = false;
 
 
-        DjikstraResult result1 = dijkstra(this->map, startRow, startCol, pushingP);
+            DjikstraResult result1 = dijkstra(this->map, startRow, startCol, pushingP);
 
-        pushingP = true;
+            pushingP = true;
 
-        DjikstraResult result2 = dijkstra(this->map, result1.path.back().first, result1.path.back().second, pushingP);
+            DjikstraResult result2 = dijkstra(this->map, result1.path.back().first, result1.path.back().second, pushingP);
 
 
             for (auto& [r, c] : result1.path) {
@@ -181,6 +192,12 @@ class MainWindow : public sf::RenderWindow {
                 int index = r * this->col + c;
                 tiles[index].setState(Tile::TileState::Path2);
             }
+            result2.pathLength += result1.pathLength;
+            result2.nodesExplored += result1.nodesExplored;
+            result2.totalTime += result1.totalTime;
+            // maybe extend vector
+            my_return_paths.djikstra_path = result2;
+
         }
         else {
 
@@ -190,6 +207,10 @@ class MainWindow : public sf::RenderWindow {
 
             Path_Result path = search_Astar( this -> map, start_pos, pickup_pos );
             Path_Result path2 = search_Astar(this->map, pickup_pos, end_pos);
+
+            path2.cost += path.cost;
+            path2.nodes_visited += path.nodes_visited;
+            my_return_paths.path_result = path2;
 
             for (auto& p : path.final_path) {
                 if (map[p.row][p.col] == 'S' || map[p.row][p.col] == 'P') continue;
@@ -203,6 +224,7 @@ class MainWindow : public sf::RenderWindow {
                 tiles[index].setState(Tile::TileState::Path2);
             }
         }
+
     }
 
 
@@ -241,14 +263,30 @@ class MainWindow : public sf::RenderWindow {
                             else if (runAStarButton->isClicked(mousePos)) {
                                 std::cout << "RUN A* STAR" << std::endl;
                                 this->showPath(true);
+                                v_astar = true;
+                                v_dijkstra = false;
+                                // return_paths.djikstra_path
                             }
                             else if (runDijkstraButton->isClicked(mousePos)) {
                                 std::cout << "RUN DIJKSTRA" << std::endl;
                                 this->showPath(false);
+                                v_dijkstra = true;
+                                v_astar = false;
                             }
                             else if (resetButton->isClicked(mousePos)) {
                                 std::cout << "RESET BUTTON" << std::endl;
                                 this->setMap(this->map);
+                            }
+                            else if (statButton->isClicked(mousePos)) {
+                                std::cout << "STAT BUTTON" << std::endl;
+                                if (v_dijkstra == true) {
+                                    std::cout << "Path len" << my_return_paths.djikstra_path.pathLength << std::endl;
+                                    std::cout <<"nodes explored" << my_return_paths.djikstra_path.nodesExplored << std::endl;
+                                    std::cout << "Total time" <<my_return_paths.djikstra_path.totalTime << std::endl;
+                                } else {
+                                    std::cout << my_return_paths.path_result.cost << std::endl;
+                                    std::cout << my_return_paths.path_result.nodes_visited<< std::endl;
+                                }
                             }
                         }
                     }
@@ -262,6 +300,7 @@ class MainWindow : public sf::RenderWindow {
             runAStarButton->draw(*this);
             runDijkstraButton->draw(*this);
             resetButton->draw(*this);
+            statButton->draw(*this);
 
             display();
         }

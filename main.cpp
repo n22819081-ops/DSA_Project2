@@ -12,7 +12,7 @@
 int main() {
 
     // Load csv and map;
-    std::vector<std::vector<char>> generateMapFromCSV();
+    // std::vector<std::vector<char>> generateMapFromCSV();
 
     // From loading
 
