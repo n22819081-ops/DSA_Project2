@@ -5,6 +5,7 @@
 #include <SFML/Graphics.hpp>
 #include "tile.h"
 #include "Dijkstra.h"
+#include "AStar.h"
 #include <random>
 #ifndef DSA_PROJECT2_MAIN_WINDOW_H
 #define DSA_PROJECT2_MAIN_WINDOW_H
@@ -115,46 +116,78 @@ class MainWindow : public sf::RenderWindow {
         }
     }
    
-    void showPath() {
-      
+    void showPath(bool tryAstar) {
         int startRow = -1, startCol = -1;
-        for (int y = 0; y < this->row && startRow == -1; y++) {
-            for (int x = 0; x < this->col && startRow == -1; x++) {
+        int pickupRow = -1, pickupCol = -1;
+        int finishRow = -1, finishCol = -1;
+        for (int y = 0; y < this->row; y++) {
+            for (int x = 0; x < this->col; x++) {
                 if (map[y][x] == 'S') {
                     startRow = y;
                     startCol = x;
+                }
+                if (map[y][x] == 'P') {
+                    pickupRow = y;
+                    pickupCol = x;
+
+                }
+                if (map[y][x] == 'F') {
+                    finishRow = y;
+                    finishCol = x;
                 }
             }
         }
         if (startRow == -1) return;  // no start cell, nothing to do
 
+        if (!tryAstar) {
 
-        bool pushingP = false;
+
+            bool pushingP = false;
 
       
-        DjikstraResult result1 = dijkstra(this->map, startRow, startCol, pushingP);
-        std::vector<std::pair<int,int>> path = result1.path;
+        std::vector<std::pair<int,int>> path = dijkstra(this->map, startRow, startCol, pushingP);
+
+        pushingP = true; 
+
+        std::vector<std::pair<int,int>> path2 = dijkstra(this->map, path.back().first, path.back().second, pushingP);
         
 
-        pushingP = true;
 
-        DjikstraResult result2 = dijkstra(this->map, path.back().first, path.back().second, pushingP);
-        std::vector<std::pair<int,int>> path2 = result2.path;
-        
+            for (auto& [r, c] : path) {
+                if (map[r][c] == 'S' || map[r][c] == 'P') continue;
+                int index = r * this->col + c;
+                tiles[index].setState(Tile::TileState::Path);
+            }
 
-     
-        for (auto& [r, c] : path) {
-            if (map[r][c] == 'S' || map[r][c] == 'P') continue;
-            int index = r * this->col + c;
-            tiles[index].setState(Tile::TileState::Path);
+            for (auto& [r, c] : path2) {
+                if (map[r][c] == 'S' || map[r][c] == 'F') continue;
+                int index = r * this->col + c;
+                tiles[index].setState(Tile::TileState::Path2);
+            }
         }
+        else {
 
-        for (auto& [r, c] : path2) {
-            if (map[r][c] == 'S' || map[r][c] == 'F') continue;
-            int index = r * this->col + c;
-            tiles[index].setState(Tile::TileState::Path2);
+            Point start_pos = {startRow, startCol};
+            Point pickup_pos = {pickupRow, pickupCol};
+            Point end_pos = {finishRow, finishCol};
+
+            Path_Result path = search_Astar( this -> map, start_pos, pickup_pos );
+            Path_Result path2 = search_Astar(this->map, pickup_pos, end_pos);
+
+            for (auto& p : path.final_path) {
+                if (map[p.row][p.col] == 'S' || map[p.row][p.col] == 'P') continue;
+                int index = p.row * this->col + p.col;
+                tiles[index].setState(Tile::TileState::Path);
+            }
+
+            for (auto& p : path2.final_path) {
+                if (map[p.row][p.col] == 'P' || map[p.row][p.col] == 'F') continue;
+                int index = p.row * this->col + p.col;
+                tiles[index].setState(Tile::TileState::Path2);
+            }
         }
     }
+
 
     void run() {
         sf::Clock clock;

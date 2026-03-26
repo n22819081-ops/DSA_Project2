@@ -30,6 +30,8 @@ add_executable(main main.cpp
         Dijkstra.cpp
         Dijkstra.h
         tilesets.h
+        AStar.cpp
+        AStar.h
 )
 
 # C++20 needed for structured bindings used in Dijkstra
