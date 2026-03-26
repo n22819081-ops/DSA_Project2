@@ -1,20 +1,8 @@
-cmake_minimum_required(VERSION 4.0)
+cmake_minimum_required(VERSION 3.28)
 #project(DSA_Project2)
 #
 #set(CMAKE_CXX_STANDARD 20)
 #
-add_executable(DSA_Project2 main.cpp
-        tilesets.h
-        tilesets.h
-        warehouse_map.cpp
-        warehouse_map.h
-        map_creation.h
-        main_window.h
-        tile.h
-        button.h
-)
-# Require CMake version 3.28 or newer
-cmake_minimum_required(VERSION 3.28)
 
 # Name of the project (you should change this to match your project)
 project(DSA_Project2 LANGUAGES CXX)

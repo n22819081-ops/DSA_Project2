@@ -17,7 +17,7 @@ using namespace std;
 double getCurrentTime() {
 
     auto now = Time::now();
-    return std::chrono::duration_cast<ms>(now.time_since_epoch()).count() / 1000;
+    return std::chrono::duration_cast<ms>(now.time_since_epoch()).count() / 1000.0;
 }
 
 
@@ -133,9 +133,11 @@ DjikstraResult dijkstra(vector<vector<char>>& grid, int startRow, int startCol, 
     vector<pair<int,int>> robotPath;
 
     if (goalRow == -1) {
-        return {robotPath, 0, pathExplored};
+        return {robotPath, 0, pathExplored, 0.0};
     }
 
+    int finalGoalRow = goalRow;
+    int finalGoalCol = goalCol;
     while (!(goalRow == startRow && goalCol == startCol)) {
         robotPath.push_back({goalRow, goalCol});
         auto [prevRow, prevCol] = previousNode[goalRow][goalCol];
@@ -146,5 +148,5 @@ DjikstraResult dijkstra(vector<vector<char>>& grid, int startRow, int startCol, 
     reverse(robotPath.begin(), robotPath.end());
     totalTime = getCurrentTime() - startTime;
     std::cout << totalTime;
-    return {robotPath, nodeDistance[goalRow][goalCol], pathExplored, totalTime};
+    return {robotPath, nodeDistance[finalGoalRow][finalGoalCol], pathExplored, totalTime};
 }
