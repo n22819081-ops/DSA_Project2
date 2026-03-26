@@ -26,7 +26,9 @@ int main() {
     //sf::RenderWindow window(sf::VideoMode({200, 200}), "SFML 3.0 Works!");
     MainWindow window(704, 804);
     window.setMap(myMap);
-    window.showPath();  // run Dijkstra and highlight the path
+    // will change when we work on button function so it works bettern stuff
+    //true is A* and false is Dijkstra
+    window.showPath(true);  // run Dijkstra and highlight the path
     window.run();
 
 
