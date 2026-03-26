@@ -8,32 +8,31 @@
 #include "main_window.h"
 #include <random>
 
-// cmake --build build && ./build/bin/main
-//git pull friend main 
-
 // WINDOW ENSURING SFML IS WORKING
 int main() {
 
-    std::default_random_engine gangster_generator;
+    // Load csv and map;
+    std::vector<std::vector<char>> generateMapFromCSV();
 
-    //WarehouseMap myWarehouse = WarehouseMap(22, 22);
-    // myWarehouse.fillOpen();
-    // myWarehouse.addBorderWalls();
-    // myWarehouse.generateFromTiles();
-    // myWarehouse.placeSpecialCells();
-    // myWarehouse.print();
+    // From loading
+
+    std::default_random_engine gangster_generator;
     std::vector<std::vector<char>> myMap = create_map(gangster_generator);
-    //sf::RenderWindow window(sf::VideoMode({200, 200}), "SFML 3.0 Works!");
+    // std::ifstream csvFile("data1.csv");
+    // std::vector<std::vector<char>> myMap = loadFromCSV(csvFile, 5);
+    // csvFile.close();
+    // Generating CSV FILE
+    // 20 x 20 -> 400 nodes * 300 -> 120000 data points
+    // std::ofstream csvFile("data1.csv");
+    //
+    // for (int i=0; i<300; i++) {
+    //     std::vector<std::vector<char>> map = create_map(gangster_generator);
+    //     saveToCSV(csvFile, i, map);
+    // }
     MainWindow window(704, 804);
     window.setMap(myMap);
-    // will change when we work on button function so it works bettern stuff
-    //true is A* and false is Dijkstra
-    window.showPath(true);  // run Dijkstra and highlight the path
     window.run();
-
-
-
-
+    //
     // while (window.isOpen()) {
     //     while (const std::optional event = window.pollEvent()) {
     //         if (event->is<sf::Event::Closed>())
@@ -42,7 +41,5 @@ int main() {
     //     window.clear();
     //     window.display();
     // }
-
-
     return 0;
 }
