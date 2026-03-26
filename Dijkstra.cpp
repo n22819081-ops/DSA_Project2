@@ -5,11 +5,13 @@
 #include <algorithm>
 using namespace std;
 
-vector<pair<int,int>> dijkstra(vector<vector<char>>& grid, int startRow, int startCol) {
+vector<pair<int,int>> dijkstra(vector<vector<char>>& grid, int startRow, int startCol, bool pushingP) {
 
     //First off intiailize the rows and columns of our grid 
     int totalRows = grid.size();
     int totalCols = grid[0].size();
+
+   
 
   
    //Vector to store the node distances within and also a vector to be able to trace our steps for the actual path 
@@ -45,12 +47,26 @@ vector<pair<int,int>> dijkstra(vector<vector<char>>& grid, int startRow, int sta
         if (distance > nodeDistance[currentRow][currentCol])
             continue;
 
-        //if it is F we are finished 
-        if (grid[currentRow][currentCol] == 'F') {
+
+        
+
+        //Go to P then F
+        if (grid[currentRow][currentCol] == 'P') {
+            
             goalRow = currentRow;
             goalCol = currentCol;
-            break;
+            
         }
+
+
+        if ((grid[currentRow][currentCol] == 'F') && (pushingP == true)) {
+        
+            goalRow = currentRow;
+            goalCol = currentCol;
+            
+            
+        }
+
 
       //loop through four times as we can go up, down, right, or left 
         for (int i = 0; i < 4; i++) {

@@ -22,6 +22,7 @@ class Tile {
             OpenStair,
             OpenHuman,
             Path,
+            Path2,
         };
 
     private:
@@ -84,10 +85,14 @@ class Tile {
                 this->sprite.setTexture(*f_special_texture);
             }
             if (this->state == Path) {
-
                 this->sprite.setTexture(*open_texture);
                 this->sprite.setColor(sf::Color(255, 220, 0));
             }
+            if (this->state == Path2) {
+                this->sprite.setTexture(*open_texture);
+                this->sprite.setColor(sf::Color(0, 200, 80));
+            }
+            
         }
 
         sf::Sprite& getSprite() {

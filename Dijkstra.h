@@ -4,6 +4,6 @@
 #include <vector>
 using namespace std;
 
-vector<pair<int,int>> dijkstra(vector<vector<char>>& grid, int startRow, int startCol);
+vector<pair<int,int>> dijkstra(vector<vector<char>>& grid, int startRow, int startCol, bool pushingP);
 
 #endif 

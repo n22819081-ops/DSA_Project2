@@ -128,14 +128,28 @@ class MainWindow : public sf::RenderWindow {
         }
         if (startRow == -1) return;  // no start cell, nothing to do
 
+
+        bool pushingP = false;
+
       
-        std::vector<std::pair<int,int>> path = dijkstra(this->map, startRow, startCol);
+        std::vector<std::pair<int,int>> path = dijkstra(this->map, startRow, startCol, pushingP);
+
+        pushingP = true; 
+
+        std::vector<std::pair<int,int>> path2 = dijkstra(this->map, path.back().first, path.back().second, pushingP);
+        
 
      
         for (auto& [r, c] : path) {
-            if (map[r][c] == 'S' || map[r][c] == 'F') continue;
+            if (map[r][c] == 'S' || map[r][c] == 'P') continue;
             int index = r * this->col + c;
             tiles[index].setState(Tile::TileState::Path);
+        }
+
+        for (auto& [r, c] : path2) {
+            if (map[r][c] == 'S' || map[r][c] == 'F') continue;
+            int index = r * this->col + c;
+            tiles[index].setState(Tile::TileState::Path2);
         }
     }
 
