@@ -69,7 +69,56 @@ bool canReach(std::vector<std::vector<char>>& map,std::pair<int, int> start, std
     return false;
 }
 //
-void saveToCSV(int map_id, std::vector<std::vector<char>> grid) {
+void saveToCSV(std::ofstream& csvFile, int map_id, std::vector<std::vector<char>> grid) {
+    if (!csvFile.is_open()) {
+        std::cerr << "ERROR UR COOKED" << std::endl;
+        return;
+    }
+    if (map_id == 0 ) {
+        csvFile << "map_id" << "," << "map";
+        csvFile << "\n";
+    }
+    csvFile << map_id << ",";
+    for (int i = 0; i < grid.size(); i++) {
+        for (int j = 0; j < grid[0].size(); j++) {
+            csvFile << grid[i][j] << ",";
+        }
+    }
+    csvFile << "\n";
+    std::cout << "Map "<< map_id << " saved"<<std::endl;
+
+    return;
+}
+
+std::vector<std::vector<char>> loadFromCSV(std::ifstream& csvFile, int map_id) {
+    std::string line;
+    if (!csvFile.is_open()) {
+        std::cerr << "ERROR UR COOKED" << std::endl;
+    }
+    std::vector<std::vector<char>> map;
+    for (int i = 0; i != map_id; i++) {
+        std::getline(csvFile, line);
+    }
+    std::stringstream ss(line);
+    map.resize(22, std::vector<char>(22));
+    std::cout << ss.str() << std::endl;
+    std::string newMap;
+    for (int i=0; i<ss.str().size(); i++) {
+        if (ss.str()[i] ==  '.' || ss.str()[i] == '#' || ss.str()[i] == '^' || ss.str()[i] == '%' || ss.str()[i] == 'P' || ss.str()[i] == 'F' || ss.str()[i] == 'S') {
+            //std::cout << ss.str()[i] << std::endl;
+            newMap += ss.str()[i];
+        }
+    }
+    //std::cout << newMap;
+    for (int j=0; j<22; j++) {
+        for (int k=0; k<22; k++) {
+            int index = j*22 + k;
+            //std:: cout << index << std::endl;
+            map[j][k] = newMap[index];
+            //std::cout << map[j][k] << std::endl;
+        }
+    }
+    return map;
 
 
 }
@@ -82,7 +131,8 @@ void saveToCSV(int map_id, std::vector<std::vector<char>> grid) {
 std::vector<std::vector<char>> create_map(std::default_random_engine& gen) {
     int rows = 22;
     int cols = 22;
-    //int create_count = 0;
+    bool canSolve = false;
+    while (!canSolve) {
         WarehouseMap warehouseMap = WarehouseMap(rows, cols);
         warehouseMap.fillOpen();
         warehouseMap.addBorderWalls();
@@ -95,10 +145,11 @@ std::vector<std::vector<char>> create_map(std::default_random_engine& gen) {
         std::cout << canReach(warehouseMap.getGrid(), start, item) << " AND " << canReach(warehouseMap.getGrid(), item, goal) << std::endl;
         if (canReach(warehouseMap.getGrid(), start, item) && canReach(warehouseMap.getGrid(), item, goal )){
             warehouseMap.print();
+            canSolve = true;
             //create_count++;
             //std::cout << create_count  << std::endl;
+            return  warehouseMap.getGrid();
         }
-
-    return  warehouseMap.getGrid();
+    }
 }
 #endif //DSA_PROJECT2_MAP_CREATION_H

@@ -6,7 +6,10 @@
 #include "tile.h"
 #include "Dijkstra.h"
 #include "AStar.h"
+#include "button.h"
 #include <random>
+#include <chrono>
+#include "map_creation.h"
 #ifndef DSA_PROJECT2_MAIN_WINDOW_H
 #define DSA_PROJECT2_MAIN_WINDOW_H
 class MainWindow : public sf::RenderWindow {
@@ -27,6 +30,14 @@ class MainWindow : public sf::RenderWindow {
         sf::Texture cratetexture;
         sf::Texture humantexture;
         sf::Texture stairtexture;
+
+        sf::Font font;
+        Button* loadMapButton;
+        Button* saveMapButton;
+        Button* runDijkstraButton;
+        Button* runAStarButton;
+        Button* resetButton;
+
 
         // Options
         // We need buttons for randomly selection of map,
@@ -71,6 +82,13 @@ class MainWindow : public sf::RenderWindow {
             std::cerr << "YOU ARE COOKED FAILED TO LOAD CRATE" << std::endl;
         }
 
+        if (!font.openFromFile("font.ttf")) {
+            std::cerr << "YOU ARE COOKED FAILED TO LOAD FONT" << std::endl;
+        }
+        loadMapButton = new Button(20.f, 720.f, 150.f, 50.f, font, "Load Random Map" );
+        runAStarButton = new Button (190.f, 720.f,120.f, 50.f, font, "Run A*");
+        runDijkstraButton = new Button(330.f, 720.f, 140.f, 50.f, font, "Run Dijkstra");
+        resetButton = new Button(490.f, 720.f, 100.f, 50.f,  font, "Reset");
         // Generate tiles
         // 32 x 32 images
         for (int y=0; y<this->row; y++) {
@@ -115,7 +133,7 @@ class MainWindow : public sf::RenderWindow {
             }
         }
     }
-   
+
     void showPath(bool tryAstar) {
         int startRow = -1, startCol = -1;
         int pickupRow = -1, pickupCol = -1;
@@ -144,7 +162,7 @@ class MainWindow : public sf::RenderWindow {
 
             bool pushingP = false;
 
-      
+
         DjikstraResult result1 = dijkstra(this->map, startRow, startCol, pushingP);
 
         pushingP = true;
@@ -199,11 +217,52 @@ class MainWindow : public sf::RenderWindow {
                     this->close();
                     break;
                 }
+                if (event->is<sf::Event::MouseButtonPressed>()) {
+                    if (auto* mouseEvent = event->getIf<sf::Event::MouseButtonPressed>()) {
+                        if (mouseEvent->button == sf::Mouse::Button::Left) {
+                            sf::Vector2f mousePos(
+                                static_cast<float>(mouseEvent->position.x),
+                                static_cast<float>(mouseEvent->position.y)
+                            );
+
+                            if (loadMapButton->isClicked(mousePos)) {
+                                std::cout << "LOADING MAP" << std::endl;
+                                unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
+                                std::mt19937 rng(seed);
+
+                                int range_min = 2;
+                                int range_max = 299;
+                                std::uniform_int_distribution<int> dist(range_min, range_max);
+                                int rand_num = dist(rng);
+                                std::ifstream csvFile("data1.csv");
+                                std::vector<std::vector<char>> myMap = loadFromCSV(csvFile, rand_num);
+                                setMap(myMap);
+                            }
+                            else if (runAStarButton->isClicked(mousePos)) {
+                                std::cout << "RUN A* STAR" << std::endl;
+                                this->showPath(true);
+                            }
+                            else if (runDijkstraButton->isClicked(mousePos)) {
+                                std::cout << "RUN DIJKSTRA" << std::endl;
+                                this->showPath(false);
+                            }
+                            else if (resetButton->isClicked(mousePos)) {
+                                std::cout << "RESET BUTTON" << std::endl;
+                                this->setMap(this->map);
+                            }
+                        }
+                    }
+                }
             }
             clear();
             for (auto& tile : this->tiles) {
                 draw(tile.getSprite());
             }
+            loadMapButton->draw(*this);
+            runAStarButton->draw(*this);
+            runDijkstraButton->draw(*this);
+            resetButton->draw(*this);
+
             display();
         }
     }

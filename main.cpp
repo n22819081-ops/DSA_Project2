@@ -31,6 +31,7 @@ int main() {
     // }
     MainWindow window(704, 804);
     window.setMap(myMap);
+
     window.run();
     //
     // while (window.isOpen()) {
