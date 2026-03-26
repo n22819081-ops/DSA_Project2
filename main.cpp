@@ -17,10 +17,10 @@ int main() {
     // From loading
 
     std::default_random_engine gangster_generator;
-    //std::vector<std::vector<char>> myMap = create_map(gangster_generator);
-    std::ifstream csvFile("data1.csv");
-    std::vector<std::vector<char>> myMap = loadFromCSV(csvFile, 5);
-    csvFile.close();
+    std::vector<std::vector<char>> myMap = create_map(gangster_generator);
+    // std::ifstream csvFile("data1.csv");
+    // std::vector<std::vector<char>> myMap = loadFromCSV(csvFile, 5);
+    // csvFile.close();
     // Generating CSV FILE
     // 20 x 20 -> 400 nodes * 300 -> 120000 data points
     // std::ofstream csvFile("data1.csv");

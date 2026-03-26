@@ -6,6 +6,8 @@
 #include "tile.h"
 #include "button.h"
 #include <random>
+#include <chrono>
+#include "map_creation.h"
 #ifndef DSA_PROJECT2_MAIN_WINDOW_H
 #define DSA_PROJECT2_MAIN_WINDOW_H
 class MainWindow : public sf::RenderWindow {
@@ -149,6 +151,16 @@ class MainWindow : public sf::RenderWindow {
 
                             if (loadMapButton->isClicked(mousePos)) {
                                 std::cout << "LOADING MAP" << std::endl;
+                                unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
+                                std::mt19937 rng(seed);
+
+                                int range_min = 2;
+                                int range_max = 299;
+                                std::uniform_int_distribution<int> dist(range_min, range_max);
+                                int rand_num = dist(rng);
+                                std::ifstream csvFile("data1.csv");
+                                std::vector<std::vector<char>> myMap = loadFromCSV(csvFile, rand_num);
+                                setMap(myMap);
                             }
                             else if (runAStarButton->isClicked(mousePos)) {
                                 std::cout << "RUN A* STAR" << std::endl;
