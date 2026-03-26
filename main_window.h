@@ -145,21 +145,20 @@ class MainWindow : public sf::RenderWindow {
             bool pushingP = false;
 
       
-        std::vector<std::pair<int,int>> path = dijkstra(this->map, startRow, startCol, pushingP);
+        DjikstraResult result1 = dijkstra(this->map, startRow, startCol, pushingP);
 
-        pushingP = true; 
+        pushingP = true;
 
-        std::vector<std::pair<int,int>> path2 = dijkstra(this->map, path.back().first, path.back().second, pushingP);
-        
+        DjikstraResult result2 = dijkstra(this->map, result1.path.back().first, result1.path.back().second, pushingP);
 
 
-            for (auto& [r, c] : path) {
+            for (auto& [r, c] : result1.path) {
                 if (map[r][c] == 'S' || map[r][c] == 'P') continue;
                 int index = r * this->col + c;
                 tiles[index].setState(Tile::TileState::Path);
             }
 
-            for (auto& [r, c] : path2) {
+            for (auto& [r, c] : result2.path) {
                 if (map[r][c] == 'S' || map[r][c] == 'F') continue;
                 int index = r * this->col + c;
                 tiles[index].setState(Tile::TileState::Path2);
