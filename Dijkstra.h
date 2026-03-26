@@ -4,6 +4,15 @@
 #include <vector>
 using namespace std;
 
-vector<pair<int,int>> dijkstra(vector<vector<char>>& grid, int startRow, int startCol, bool pushingP);
+
+struct DjikstraResult {
+
+    vector<std::pair<int,int>> path;
+    int pathLength;
+    int nodesExplored;
+    double totalTime;
+};
+
+DjikstraResult dijkstra(vector<vector<char>>& grid, int startRow, int startCol, bool pushingP);
 
 #endif 

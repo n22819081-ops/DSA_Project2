@@ -3,15 +3,35 @@
 #include <tuple>
 #include <climits>
 #include <algorithm>
+#include <iostream>
+#include <chrono>
+#include <stdlib.h>
+
+
+typedef std::chrono::high_resolution_clock Time;
+typedef std::chrono::milliseconds ms;
+
 using namespace std;
 
-vector<pair<int,int>> dijkstra(vector<vector<char>>& grid, int startRow, int startCol, bool pushingP) {
+
+double getCurrentTime() {
+
+    auto now = Time::now();
+    return std::chrono::duration_cast<ms>(now.time_since_epoch()).count() / 1000;
+}
+
+
+DjikstraResult dijkstra(vector<vector<char>>& grid, int startRow, int startCol, bool pushingP) {
 
     //First off intiailize the rows and columns of our grid 
     int totalRows = grid.size();
     int totalCols = grid[0].size();
 
-   
+    int pathExplored = 0;
+
+    double startTime = getCurrentTime();
+
+    double totalTime = 0;
 
   
    //Vector to store the node distances within and also a vector to be able to trace our steps for the actual path 
@@ -47,8 +67,6 @@ vector<pair<int,int>> dijkstra(vector<vector<char>>& grid, int startRow, int sta
         if (distance > nodeDistance[currentRow][currentCol])
             continue;
 
-
-        
 
         //Go to P then F
         if (grid[currentRow][currentCol] == 'P') {
@@ -86,11 +104,14 @@ vector<pair<int,int>> dijkstra(vector<vector<char>>& grid, int startRow, int sta
 
             if (grid[neighborRow][neighborCol] == '.') {
                 tileWeight = 1; 
+                pathExplored += 1;
                 } else if (grid[neighborRow][neighborCol] == '^') {
                 tileWeight = 3;
+                pathExplored += 3;
                 }
             else {
                 tileWeight = 2;
+                pathExplored += 2;
             }
 
             
@@ -112,7 +133,7 @@ vector<pair<int,int>> dijkstra(vector<vector<char>>& grid, int startRow, int sta
     vector<pair<int,int>> robotPath;
 
     if (goalRow == -1) {
-        return robotPath;
+        return {robotPath, 0, pathExplored};
     }
 
     while (!(goalRow == startRow && goalCol == startCol)) {
@@ -123,5 +144,7 @@ vector<pair<int,int>> dijkstra(vector<vector<char>>& grid, int startRow, int sta
     }
     robotPath.push_back({startRow, startCol});
     reverse(robotPath.begin(), robotPath.end());
-    return robotPath;
+    totalTime = getCurrentTime() - startTime;
+    std::cout << totalTime;
+    return {robotPath, nodeDistance[goalRow][goalCol], pathExplored, totalTime};
 }

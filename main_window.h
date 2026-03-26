@@ -132,11 +132,14 @@ class MainWindow : public sf::RenderWindow {
         bool pushingP = false;
 
       
-        std::vector<std::pair<int,int>> path = dijkstra(this->map, startRow, startCol, pushingP);
+        DjikstraResult result1 = dijkstra(this->map, startRow, startCol, pushingP);
+        std::vector<std::pair<int,int>> path = result1.path;
+        
 
-        pushingP = true; 
+        pushingP = true;
 
-        std::vector<std::pair<int,int>> path2 = dijkstra(this->map, path.back().first, path.back().second, pushingP);
+        DjikstraResult result2 = dijkstra(this->map, path.back().first, path.back().second, pushingP);
+        std::vector<std::pair<int,int>> path2 = result2.path;
         
 
      
