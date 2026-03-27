@@ -211,6 +211,7 @@ class MainWindow : public sf::RenderWindow {
 
             path2.cost += path.cost;
             path2.nodes_visited += path.nodes_visited;
+            path2.Astar_time += path.Astar_time;
             my_return_paths.path_result = path2;
 
             for (auto& p : path.final_path) {
@@ -289,7 +290,7 @@ class MainWindow : public sf::RenderWindow {
                                 } else {
                                     std::cout << my_return_paths.path_result.cost << std::endl;
                                     std::cout << my_return_paths.path_result.nodes_visited<< std::endl;
-                                    statWindow stats(500, 300, my_return_paths.path_result.nodes_visited, my_return_paths.path_result.cost, 0);
+                                    statWindow stats(500, 300, my_return_paths.path_result.nodes_visited, my_return_paths.path_result.cost, my_return_paths.path_result.Astar_time);
                                     stats.run();
                                 }
                             }

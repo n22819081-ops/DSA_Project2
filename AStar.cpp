@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <limits>
 #include <cmath>
+#include <chrono>
 using namespace std;
 
 
@@ -45,6 +46,7 @@ Path_Result search_Astar(const vector<vector<char>>& grid, Point start_pos, Poin
 
     //the result thats gets returned at the end of the function
     Path_Result sol_result;
+    auto start_time = chrono::high_resolution_clock::now();
 
 //gets the amount of rows and columns in the grid.
     int total_rows = grid.size();
@@ -57,7 +59,11 @@ Path_Result search_Astar(const vector<vector<char>>& grid, Point start_pos, Poin
         !inside_map(end_pos.row, end_pos.col, total_rows, total_cols) ||
         is_wall(grid[start_pos.row][start_pos.col]) ||
         is_wall(grid[end_pos.row][end_pos.col])  ) {
-        return sol_result; 
+
+        auto finish_time = chrono::high_resolution_clock::now();
+        sol_result.Astar_time = chrono::duration<double>(finish_time - start_time).count();
+
+        return sol_result;
     }
 
 
@@ -124,6 +130,9 @@ Path_Result search_Astar(const vector<vector<char>>& grid, Point start_pos, Poin
             }
 
             reverse(sol_result.final_path.begin(), sol_result.final_path.end());
+            auto finish_time = chrono::high_resolution_clock::now();
+            sol_result.Astar_time = chrono::duration<double>(finish_time - start_time).count();
+
             return sol_result;
 
         }
@@ -147,6 +156,8 @@ Path_Result search_Astar(const vector<vector<char>>& grid, Point start_pos, Poin
         }
     }
 
+    auto finish_time = chrono::high_resolution_clock::now();
+    sol_result.Astar_time = chrono::duration<double>(finish_time - start_time).count();
     return sol_result;
 
 
