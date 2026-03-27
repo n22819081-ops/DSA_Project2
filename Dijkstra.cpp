@@ -66,6 +66,7 @@ DjikstraResult dijkstra(vector<vector<char>>& grid, int startRow, int startCol, 
         //determines if the path is 'stale' or already covered 
         if (distance > nodeDistance[currentRow][currentCol])
             continue;
+        pathExplored++;
 
 
         //Go to P then F
@@ -104,15 +105,16 @@ DjikstraResult dijkstra(vector<vector<char>>& grid, int startRow, int startCol, 
 
             if (grid[neighborRow][neighborCol] == '.') {
                 tileWeight = 1; 
-                pathExplored += 1;
+                // pathExplored += 1;
                 } else if (grid[neighborRow][neighborCol] == '^') {
                 tileWeight = 3;
-                pathExplored += 3;
+                // pathExplored += 3;
                 }
             else {
                 tileWeight = 2;
-                pathExplored += 2;
+                // pathExplored += 2;
             }
+            // pathExplored += 1;
 
             
 

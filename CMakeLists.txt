@@ -37,6 +37,7 @@ add_executable(main main.cpp
         AStar.cpp
         AStar.h
         button.h
+        stat_window.h
 )
 
 # C++20 needed for structured bindings used in Dijkstra

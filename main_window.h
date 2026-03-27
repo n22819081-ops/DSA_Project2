@@ -10,6 +10,7 @@
 #include <random>
 #include <chrono>
 #include "map_creation.h"
+#include "stat_window.h"
 #ifndef DSA_PROJECT2_MAIN_WINDOW_H
 #define DSA_PROJECT2_MAIN_WINDOW_H
 struct return_paths {
@@ -283,9 +284,13 @@ class MainWindow : public sf::RenderWindow {
                                     std::cout << "Path len" << my_return_paths.djikstra_path.pathLength << std::endl;
                                     std::cout <<"nodes explored" << my_return_paths.djikstra_path.nodesExplored << std::endl;
                                     std::cout << "Total time" <<my_return_paths.djikstra_path.totalTime << std::endl;
+                                    statWindow stats(500, 300, my_return_paths.djikstra_path.nodesExplored ,my_return_paths.djikstra_path.pathLength, my_return_paths.djikstra_path.totalTime);
+                                    stats.run();
                                 } else {
                                     std::cout << my_return_paths.path_result.cost << std::endl;
                                     std::cout << my_return_paths.path_result.nodes_visited<< std::endl;
+                                    statWindow stats(500, 300, my_return_paths.path_result.nodes_visited, my_return_paths.path_result.cost, 0);
+                                    stats.run();
                                 }
                             }
                         }
