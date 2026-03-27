@@ -13,7 +13,7 @@ struct Path_Result {
 
     std::vector<Point> final_path;
     std::vector<Point> visited_order;
-
+    double Astar_time = 0.0;
     int nodes_visited = 0;
     int cost = 0;
 
