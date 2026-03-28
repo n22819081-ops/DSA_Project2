@@ -149,6 +149,6 @@ DjikstraResult dijkstra(vector<vector<char>>& grid, int startRow, int startCol, 
     robotPath.push_back({startRow, startCol});
     reverse(robotPath.begin(), robotPath.end());
     totalTime = getCurrentTime() - startTime;
-    std::cout << totalTime;
+    //std::cout << totalTime;
     return {robotPath, nodeDistance[finalGoalRow][finalGoalCol], pathExplored, totalTime};
 }
