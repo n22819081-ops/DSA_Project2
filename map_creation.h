@@ -101,7 +101,7 @@ std::vector<std::vector<char>> loadFromCSV(std::ifstream& csvFile, int map_id) {
     }
     std::stringstream ss(line);
     map.resize(22, std::vector<char>(22));
-    std::cout << ss.str() << std::endl;
+    //std::cout << ss.str() << std::endl;
     std::string newMap;
     for (int i=0; i<ss.str().size(); i++) {
         if (ss.str()[i] ==  '.' || ss.str()[i] == '#' || ss.str()[i] == '^' || ss.str()[i] == '%' || ss.str()[i] == 'P' || ss.str()[i] == 'F' || ss.str()[i] == 'S') {
@@ -142,14 +142,16 @@ std::vector<std::vector<char>> create_map(std::default_random_engine& gen) {
         std::pair<int,int> start = warehouseMap.findCell('S');
         std::pair<int,int> goal = warehouseMap.findCell('F');
         std::pair<int,int> item = warehouseMap.findCell('P');
-        std::cout << canReach(warehouseMap.getGrid(), start, item) << " AND " << canReach(warehouseMap.getGrid(), item, goal) << std::endl;
+        //std::cout << canReach(warehouseMap.getGrid(), start, item) << " AND " << canReach(warehouseMap.getGrid(), item, goal) << std::endl;
         if (canReach(warehouseMap.getGrid(), start, item) && canReach(warehouseMap.getGrid(), item, goal )){
-            warehouseMap.print();
+            //warehouseMap.print();
             canSolve = true;
             //create_count++;
             //std::cout << create_count  << std::endl;
             return  warehouseMap.getGrid();
         }
     }
+    // SHOULD NEVER REACH BUT
+    return std::vector<std::vector<char>>();
 }
 #endif //DSA_PROJECT2_MAP_CREATION_H

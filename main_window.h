@@ -28,6 +28,17 @@ class MainWindow : public sf::RenderWindow {
         return_paths my_return_paths;
         bool v_astar;
         bool v_dijkstra;
+
+
+        std::vector<std::pair<int, int>> animatedPath1;
+        std::vector<std::pair<int, int>> animatedPath2;
+
+        int path1Index= 0;
+        int path2Index =0;
+        bool animated;
+        bool animatedSecond;
+        sf::Clock animationclock;
+        sf::Time delay = sf::milliseconds(67);
         // Texture used for MainWindow
         // For warehouse map
         sf::Texture wallTexture;
@@ -118,7 +129,7 @@ class MainWindow : public sf::RenderWindow {
                 int index = y*this->col + x;
                 if (map[y][x] == '.' ) {
                     tiles[index].setState(Tile::TileState::Open);
-                    std::cout << map[y][x];
+                    //std::cout << map[y][x];
                 }
                 if (map[y][x] == '%') {
                     tiles[index].setState(Tile::TileState::OpenStair);
@@ -168,7 +179,7 @@ class MainWindow : public sf::RenderWindow {
             }
         }
         if (startRow == -1) return;  // no start cell, nothing to do
-
+        this->setMap(this->map);
         if (!tryAstar) {
 
 
@@ -181,17 +192,26 @@ class MainWindow : public sf::RenderWindow {
 
             DjikstraResult result2 = dijkstra(this->map, result1.path.back().first, result1.path.back().second, pushingP);
 
+            animatedPath1.clear();
+            animatedPath2.clear();
+            path1Index = 0;
+            path2Index = 0;
+            animated = true;
+            animatedSecond = false;
+
 
             for (auto& [r, c] : result1.path) {
                 if (map[r][c] == 'S' || map[r][c] == 'P') continue;
                 int index = r * this->col + c;
-                tiles[index].setState(Tile::TileState::Path);
+                //tiles[index].setState(Tile::TileState::Path);
+                animatedPath1.push_back({r,c});
             }
 
             for (auto& [r, c] : result2.path) {
                 if (map[r][c] == 'S' || map[r][c] == 'F') continue;
                 int index = r * this->col + c;
-                tiles[index].setState(Tile::TileState::Path2);
+                //tiles[index].setState(Tile::TileState::Path2);
+                animatedPath2.push_back({r,c});
             }
             result2.pathLength += result1.pathLength;
             result2.nodesExplored += result1.nodesExplored;
@@ -201,6 +221,13 @@ class MainWindow : public sf::RenderWindow {
 
         }
         else {
+            animatedPath1.clear();
+            animatedPath2.clear();
+            path1Index = 0;
+            path2Index = 0;
+            animated = true;
+            animatedSecond = false;
+
 
             Point start_pos = {startRow, startCol};
             Point pickup_pos = {pickupRow, pickupCol};
@@ -217,18 +244,47 @@ class MainWindow : public sf::RenderWindow {
             for (auto& p : path.final_path) {
                 if (map[p.row][p.col] == 'S' || map[p.row][p.col] == 'P') continue;
                 int index = p.row * this->col + p.col;
-                tiles[index].setState(Tile::TileState::Path);
+                //tiles[index].setState(Tile::TileState::Path);
+                animatedPath1.push_back({p.row, p.col});
             }
 
             for (auto& p : path2.final_path) {
                 if (map[p.row][p.col] == 'P' || map[p.row][p.col] == 'F') continue;
                 int index = p.row * this->col + p.col;
-                tiles[index].setState(Tile::TileState::Path2);
+                //tiles[index].setState(Tile::TileState::Path2);
+                animatedPath2.push_back({p.row, p.col});
             }
         }
 
     }
 
+// FOR ITERATING THRU THE TILES
+    void pathAnimation() {
+        if (animated == false) {
+            return;
+        }
+        if (animationclock.getElapsedTime() < delay) {
+            return;
+        }
+        animationclock.restart();
+        if (animatedSecond == false) {
+            if (path1Index < animatedPath1.size()) {
+                auto [r,c] = animatedPath1[path1Index++];
+                int index = r*this->col + c;
+                tiles[index].setState(Tile::TileState::Path);
+            }else {
+                animatedSecond = true;
+            }
+        } else {
+            if (path2Index < animatedPath2.size()) {
+                auto [r,c] = animatedPath2[path2Index++];
+                int index = r*this->col + c;
+                tiles[index].setState(Tile::TileState::Path);
+            } else {
+                animated = false;
+            }
+        }
+    }
 
     void run() {
         sf::Clock clock;
@@ -250,7 +306,7 @@ class MainWindow : public sf::RenderWindow {
                             );
 
                             if (loadMapButton->isClicked(mousePos)) {
-                                std::cout << "LOADING MAP" << std::endl;
+                                //std::cout << "LOADING MAP" << std::endl;
                                 unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
                                 std::mt19937 rng(seed);
 
@@ -263,33 +319,33 @@ class MainWindow : public sf::RenderWindow {
                                 setMap(myMap);
                             }
                             else if (runAStarButton->isClicked(mousePos)) {
-                                std::cout << "RUN A* STAR" << std::endl;
+                                //std::cout << "RUN A* STAR" << std::endl;
                                 this->showPath(true);
                                 v_astar = true;
                                 v_dijkstra = false;
                                 // return_paths.djikstra_path
                             }
                             else if (runDijkstraButton->isClicked(mousePos)) {
-                                std::cout << "RUN DIJKSTRA" << std::endl;
+                                //std::cout << "RUN DIJKSTRA" << std::endl;
                                 this->showPath(false);
                                 v_dijkstra = true;
                                 v_astar = false;
                             }
                             else if (resetButton->isClicked(mousePos)) {
-                                std::cout << "RESET BUTTON" << std::endl;
+                                //std::cout << "RESET BUTTON" << std::endl;
                                 this->setMap(this->map);
                             }
                             else if (statButton->isClicked(mousePos)) {
-                                std::cout << "STAT BUTTON" << std::endl;
+                                //std::cout << "STAT BUTTON" << std::endl;
                                 if (v_dijkstra == true) {
-                                    std::cout << "Path len" << my_return_paths.djikstra_path.pathLength << std::endl;
-                                    std::cout <<"nodes explored" << my_return_paths.djikstra_path.nodesExplored << std::endl;
-                                    std::cout << "Total time" <<my_return_paths.djikstra_path.totalTime << std::endl;
+                                   // std::cout << "Path len" << my_return_paths.djikstra_path.pathLength << std::endl;
+                                    //std::cout <<"nodes explored" << my_return_paths.djikstra_path.nodesExplored << std::endl;
+                                    //std::cout << "Total time" <<my_return_paths.djikstra_path.totalTime << std::endl;
                                     statWindow stats(500, 300, my_return_paths.djikstra_path.nodesExplored ,my_return_paths.djikstra_path.pathLength, my_return_paths.djikstra_path.totalTime);
                                     stats.run();
                                 } else {
-                                    std::cout << my_return_paths.path_result.cost << std::endl;
-                                    std::cout << my_return_paths.path_result.nodes_visited<< std::endl;
+                                    //std::cout << my_return_paths.path_result.cost << std::endl;
+                                    //std::cout << my_return_paths.path_result.nodes_visited<< std::endl;
                                     statWindow stats(500, 300, my_return_paths.path_result.nodes_visited, my_return_paths.path_result.cost, my_return_paths.path_result.Astar_time);
                                     stats.run();
                                 }
@@ -298,6 +354,7 @@ class MainWindow : public sf::RenderWindow {
                     }
                 }
             }
+            pathAnimation();
             clear();
             for (auto& tile : this->tiles) {
                 draw(tile.getSprite());
