@@ -29,7 +29,8 @@ void WarehouseMap::fillOpen() {
 }
 
 void WarehouseMap::replaceOpen(std::default_random_engine& ro_Generator) {
-    std::uniform_int_distribution<int> distribution(0, 2);
+    // 6 OR 7 should be valid :cry:
+    std::uniform_int_distribution<int> distribution(0, 6);
 
     //std::cout << "RANDOM GENERATOR: " << rand_n << std::endl;
     for (int row=0; row<rows; row++) {
